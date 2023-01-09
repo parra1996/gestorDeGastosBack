@@ -1,8 +1,7 @@
-
 const express = require('express');
 const app = express();
 const cors = require('cors');
-// const db = require('./db.js');
+const db = require('./db.js');
 
 const PORT = process.env.PORT || 5000;
 
@@ -15,12 +14,10 @@ let corsOptions = {
     optionsSuccessStatus: 204
 };
 
-app.use(express.json()); 
-app.use(cors(corsOptions));  
+app.use(express.json());
+app.use(cors(corsOptions));
 app.use(router);
 
+db();
 
-// db.then(()=>{
-    app.listen(PORT, ()=> console.log(`Server on port ${PORT}`)); 
-// })
-// .catch((err)=> console.log(err.message));   
+app.listen(PORT, () => console.log(`Server on port ${PORT}`)); 
