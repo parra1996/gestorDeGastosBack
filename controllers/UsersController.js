@@ -99,5 +99,15 @@ UsersController.login = async (req, res) => {
 
 }
 
+UsersController.agregarGasto = async (req,res) => { 
+
+    try { 
+
+// todo: hacer la funcion de agregar un gasto 
+    }catch (error) {
+        return res.send(error)
+    }
+}
+
 
 module.exports = UsersController;

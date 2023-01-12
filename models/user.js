@@ -1,6 +1,4 @@
 const mongoose = require('mongoose')
-const { type } = require('os')
-const { NUMBER, INTEGER } = require('sequelize')
 
 const Schema = mongoose.Schema
 
@@ -24,12 +22,14 @@ const userSchema = new Schema({
     },
     ingresos : [
         {
-
+            nombre : String,
+            cantidad : Number
         }
     ],
     egresos : [
         {
-
+            nombre : String,
+            cantidad : Number
         }
     ],
     resumen_anual : [
