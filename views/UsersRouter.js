@@ -6,6 +6,7 @@ router.get("/", UsersController.allUser);
 router.post("/register", UsersController.register);
 router.post("/login", UsersController.login);
 router.post("/agregarGasto", UsersController.agregarGasto);
+router.post("/agregarIngreso", UsersController.agregarIngreso);
 
 
 

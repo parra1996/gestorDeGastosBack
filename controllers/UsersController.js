@@ -101,13 +101,86 @@ UsersController.login = async (req, res) => {
 
 UsersController.agregarGasto = async (req,res) => { 
 
-    try { 
+    let {
+        id_user,
+        nombre,
+        cantidad
+    } = req.body ; 
 
-// todo: hacer la funcion de agregar un gasto 
+    try { 
+        await User.findOneAndUpdate(
+            { _id: id_user },
+            {
+                $push: {
+                    egresos: {
+                        "nombre": nombre,
+                        "cantidad" : cantidad
+                    }
+                }
+            }
+        )
+        
+        await User.findById({
+            _id: id_user
+        }).then(informacion => {
+
+            const [ egreso ] = informacion.egresos.slice(-1) ; 
+            const {
+                nombre,
+                cantidad
+            } = egreso ;
+            
+            res.status(200).send(`Has ingresado ${nombre} bajo el monto de ${cantidad} euros.`)
+        }).catch(error => {
+            res.status(500).send(error)
+        })
+
+
     }catch (error) {
         return res.send(error)
     }
 }
 
+UsersController.agregarIngreso =  async (req,res) => {
+    
+    let {
+        id_user,
+        nombre,
+        cantidad
+    } = req.body ; 
+
+    try { 
+        await User.findOneAndUpdate(
+            { _id: id_user },
+            {
+                $push: {
+                    ingresos: {
+                        "nombre": nombre,
+                        "cantidad" : cantidad
+                    }
+                }
+            }
+        )
+        
+        await User.findById({
+            _id: id_user
+        }).then(informacion => {
+
+            const [ ingreso ] = informacion.ingresos.slice(-1) ; 
+            const {
+                nombre,
+                cantidad
+            } = ingreso ;
+            
+            res.status(200).send(`Has ingresado ${nombre} bajo el monto de ${cantidad} euros.`)
+        }).catch(error => {
+            res.status(500).send(error)
+        })
+
+
+    }catch (error) {
+        return res.send(error)
+    }
+}
 
 module.exports = UsersController;
