@@ -28,8 +28,8 @@ UsersController.register = async (req, res) => {
         firstName,
         lastName,
         userName,
-    } = req.body ;
-    
+    } = req.body;
+
     let password = bcrypt.hashSync(req.body.password, Number.parseInt(authConfig.rounds));
 
     User.find({
@@ -99,86 +99,134 @@ UsersController.login = async (req, res) => {
 
 }
 
-UsersController.agregarGasto = async (req,res) => { 
+UsersController.agregarGasto = async (req, res) => {
 
     let {
         id_user,
         nombre,
         cantidad
-    } = req.body ; 
+    } = req.body;
 
-    try { 
-        await User.findOneAndUpdate(
-            { _id: id_user },
-            {
-                $push: {
-                    egresos: {
-                        "nombre": nombre,
-                        "cantidad" : cantidad
-                    }
+    try {
+        await User.findOneAndUpdate({
+            _id: id_user
+        }, {
+            $push: {
+                egresos: {
+                    "nombre": nombre,
+                    "cantidad": cantidad
                 }
             }
-        )
-        
+        })
+
         await User.findById({
             _id: id_user
         }).then(informacion => {
 
-            const [ egreso ] = informacion.egresos.slice(-1) ; 
+            const [egreso] = informacion.egresos.slice(-1);
             const {
                 nombre,
                 cantidad
-            } = egreso ;
-            
+            } = egreso;
+
             res.status(200).send(`Has ingresado ${nombre} bajo el monto de ${cantidad} euros.`)
         }).catch(error => {
             res.status(500).send(error)
         })
 
 
-    }catch (error) {
+    } catch (error) {
         return res.send(error)
     }
 }
 
-UsersController.agregarIngreso =  async (req,res) => {
-    
+UsersController.quitarGasto = async (req, res) => {
+
+    let {
+        id_user,
+        id_egreso,
+    } = req.body;
+
+    try {
+
+        await User.updateOne({
+            _id: id_user,
+        }, {
+            $pull: {
+                egresos: {
+                    _id: id_egreso
+                }
+            }
+        }).then(info => {
+        return res.send("se ha quitado el gasto")
+        })
+
+    } catch (error) {
+        return res.send(error)
+    }
+}
+UsersController.agregarIngreso = async (req, res) => {
+
     let {
         id_user,
         nombre,
         cantidad
-    } = req.body ; 
+    } = req.body;
 
-    try { 
-        await User.findOneAndUpdate(
-            { _id: id_user },
-            {
-                $push: {
-                    ingresos: {
-                        "nombre": nombre,
-                        "cantidad" : cantidad
-                    }
+    try {
+        await User.findOneAndUpdate({
+            _id: id_user
+        }, {
+            $push: {
+                ingresos: {
+                    "nombre": nombre,
+                    "cantidad": cantidad
                 }
             }
-        )
-        
+        })
+
         await User.findById({
             _id: id_user
         }).then(informacion => {
 
-            const [ ingreso ] = informacion.ingresos.slice(-1) ; 
+            const [ingreso] = informacion.ingresos.slice(-1);
             const {
                 nombre,
                 cantidad
-            } = ingreso ;
-            
+            } = ingreso;
+
             res.status(200).send(`Has ingresado ${nombre} bajo el monto de ${cantidad} euros.`)
         }).catch(error => {
             res.status(500).send(error)
         })
 
 
-    }catch (error) {
+    } catch (error) {
+        return res.send(error)
+    }
+}
+
+UsersController.quitarIngreso = async (req, res) => {
+    let {
+        id_user,
+        id_egreso,
+    } = req.body;
+
+    try {
+
+        await User.updateOne({
+            _id: id_user,
+        }, {
+            $pull: {
+                ingresos: {
+                    _id: id_egreso
+                }
+            }
+        }).then(info => {
+        return res.send("se ha quitado el gasto")
+        })
+
+    } catch (error) {
         return res.send(error)
     }
 }
